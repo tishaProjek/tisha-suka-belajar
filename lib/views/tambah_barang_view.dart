@@ -1,50 +1,56 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:tokob_online/models/movie.dart';
-import 'package:tokob_online/services/movie.dart';
 import 'package:tokob_online/widgets/alert.dart';
+import 'package:tokob_online/views/tambah_barang_view.dart';
+import 'package:tokob_online/views/barang_view.dart';
+import 'package:tokob_online/models/barang_model.dart';
+import 'package:tokob_online/services/barang.dart';
 
-class TambahMovieView extends StatefulWidget {
-    String title;
-    MovieModel? item;
-    TambahMovieView({required this.title, required this.item, required Map<dynamic, String> Item});
-  
+
+class TambahBarangView extends StatefulWidget {
+  final String title;
+  final BarangModel? item;
+
+  const TambahBarangView(
+      {super.key, required this.title, this.item, required String name});
 
   @override
-  State<TambahMovieView> createState() => _TambahMovieViewState();
+  State<TambahBarangView> createState() => _TambahBarangViewState();
 }
 
-class _TambahMovieViewState extends State<TambahMovieView> {
-    MovieService movie = MovieService();
+class _TambahBarangViewState extends State<TambahBarangView> {
+  BarangService barang = BarangService();
   final formKey = GlobalKey<FormState>();
-  TextEditingController title = TextEditingController();
-  TextEditingController voteAverage = TextEditingController();
-  TextEditingController overView = TextEditingController();
+
+  TextEditingController name = TextEditingController();
+  TextEditingController price = TextEditingController();
+  TextEditingController description = TextEditingController();
+
   File? selectedImage;
   bool? isLoading = false;
-  Future getImage() async{
+  Future getImage() async {
     setState(() {
-      isLoading= false;
+      isLoading = false;
     });
-
   }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     if (widget.item != null) {
-      title.text = widget.item!.title!;
-      voteAverage.text = widget.item!.voteAverage!.toString();
-      overView.text = widget.item!.overview!;
+      name.text = widget.item!.name!;
+      price.text = widget.item!.price!.toString();
+      description.text = widget.item!.description!;
       selectedImage = null;
     } else {
-      title.clear();
-      voteAverage.clear();
-      overView.clear();
+      name.clear();
+      price.clear();
+      description.clear();
       selectedImage = null;
     }
-
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,7 +67,7 @@ class _TambahMovieViewState extends State<TambahMovieView> {
             child: Column(
               children: [
                 TextFormField(
-                    controller: title,
+                    controller: name,
                     decoration: InputDecoration(label: Text("Title")),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -70,8 +76,8 @@ class _TambahMovieViewState extends State<TambahMovieView> {
                         return null;
                       }
                     }),
- TextFormField(
-                    controller: voteAverage,
+                TextFormField(
+                    controller: price,
                     decoration: InputDecoration(label: Text("Vote Average")),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -81,7 +87,7 @@ class _TambahMovieViewState extends State<TambahMovieView> {
                       }
                     }),
                 TextFormField(
-                    controller: overView,
+                    controller: description,
                     decoration: InputDecoration(label: Text("Over View")),
                     validator: (value) {
                       if (value!.isEmpty) {
@@ -100,33 +106,36 @@ class _TambahMovieViewState extends State<TambahMovieView> {
                         width: MediaQuery.of(context).size.width,
                         child: Image.file(selectedImage!),
                       )
-                      : isLoading == true
+                    : isLoading == true
                         ? CircularProgressIndicator()
-                        : Center(child: Text("Please Get the Images")),
-               	 ElevatedButton(
+                        : Center(child: Text("tolong get the image")),
+                ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(255, 244, 144, 255),
+                        backgroundColor:
+                            const Color.fromARGB(255, 244, 144, 255),
                         foregroundColor: Colors.white),
                     onPressed: () async {
                       if (formKey.currentState!.validate()) {
                         var data = {
-                          "title": title.text,
-                          "voteaverage": voteAverage.text,
-                          "overview": overView.text,
+                          "nama": name.text,
+                          "harga": price.text,
+                          "deskripsi": description.text,
                         };
                         var result;
                         if (widget.item != null) {
-                          result = await movie.insertMovie(
-                              data, selectedImage, widget.item!.id as String?);
+                          result = await barang.insertBarang(
+                              data, selectedImage,
+                              id: widget.item!.id.toString());
                         } else {
-                          result = await movie.insertMovie(
-                              data, selectedImage, null);
+                          result =
+                              await barang.insertBarang(data, selectedImage);
                         }
-  if (result.status == true) {
+
+                        if (result.status == true) {
                           AlertMessage()
                               .showAlert(context, result.message, true);
                           Navigator.pop(context);
-                          Navigator.pushReplacementNamed(context, '/movie');
+                          Navigator.pushReplacementNamed(context, '/barang');
                         } else {
                           AlertMessage()
                               .showAlert(context, result.message, false);
@@ -142,6 +151,3 @@ class _TambahMovieViewState extends State<TambahMovieView> {
     );
   }
 }
-
-
-

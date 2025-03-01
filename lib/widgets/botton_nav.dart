@@ -25,7 +25,6 @@ class _BottomNavState extends State<BottomNav> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getDataLogin();
   }
@@ -35,7 +34,7 @@ class _BottomNavState extends State<BottomNav> {
       if (index == 0) {
         Navigator.pushReplacementNamed(context, '/dashboard');
       } else if (index == 1) {
-        Navigator.pushReplacementNamed(context, '/movie');
+        Navigator.pushReplacementNamed(context, '/barang');
       }
     } else if (role == "user") {
       if (index == 0) {
@@ -50,7 +49,7 @@ class _BottomNavState extends State<BottomNav> {
   Widget build(BuildContext context) {
     return role == "admin"
         ? BottomNavigationBar(
-            selectedItemColor: Colors.orange,
+            selectedItemColor: Colors.black,
             unselectedItemColor: Colors.grey,
             currentIndex: widget.activePage,
             onTap: (index) => {getLink(index)},
@@ -61,12 +60,12 @@ class _BottomNavState extends State<BottomNav> {
                 ),
                 BottomNavigationBarItem(
                   icon: Icon(Icons.file_copy),
-                  label: 'Movie',
+                  label: 'Barang',
                 ),
               ])
         : role == "user"
             ? BottomNavigationBar(
-                selectedItemColor: Colors.orange,
+                selectedItemColor: Colors.black,
                 unselectedItemColor: Colors.grey,
                 currentIndex: widget.activePage,
                 onTap: (index) => {getLink(index)},

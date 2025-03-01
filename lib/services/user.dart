@@ -27,8 +27,7 @@ class UserService {
     } else {
       ResponseDataMap response = ResponseDataMap(
           status: false,
-          message:
-              "gagal menambah user dengan code error ${register.statusCode}");
+          message: "MaaFP gagal menambah user dan Kode ${register.statusCode}");
       return response;
     }
   }
@@ -37,20 +36,20 @@ class UserService {
     var uri = Uri.parse(url.BaseUrl + "/auth/login");
     var register = await http.post(uri, body: datas);
     var data = json.decode(register.body);
-    
+
     if (register.statusCode == 200) {
-      if (data["status"] == true) {
+      if (data.containsKey("status") && data["status"] == true) {
         UserLogin userLogin = UserLogin(
             status: data["status"],
-            token: data["token"],
+            token: data["authorization"]["token"],
             message: data["message"],
-            id: data["user"]["id"],
-            nama_user: data["user"]["nama_user"],
-            email: data["user"]["email"],
-            role: data["user"]["role"]);
+            id: data["data"]["id"], // Data user ada di "data"
+            nama_user: data["data"]["name"], // Sesuai field API
+            email: data["data"]["email"],
+            role: data["data"]["role"]);
         await userLogin.prefs();
         ResponseDataMap response = ResponseDataMap(
-            status: true, message: "Sukses login user", data: data);
+            status: true, message: "AseLole Sukses", data: data);
         return response;
       } else {
         ResponseDataMap response =

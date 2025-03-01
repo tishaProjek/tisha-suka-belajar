@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tokob_online/services/user.dart';
 import 'package:tokob_online/widgets/alert.dart';
 import 'package:tokob_online/services/user.dart';
-import 'package:tokob_online/widgets/alert.dart';
-import 'package:tokob_online/views/register_user_view.dart';
 import 'package:tokob_online/views/dasboard.dart';
 
 class LoginView extends StatefulWidget {
@@ -24,109 +21,136 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 250, 240, 230),
       appBar: AppBar(
-        title: Text("Nih Login nya"),
-        backgroundColor: const Color.fromARGB(255, 236, 125, 255),
-        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/dashboard');
-              },
-              icon: Icon(Icons.add))
-        ],
+        title: Text("cIhUy Login"),
+        backgroundColor: const Color.fromARGB(255, 255, 128, 0),
+        foregroundColor: Colors.white,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          margin: EdgeInsets.all(10),
-          padding: EdgeInsets.all(10),
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(color: Colors.white),
-          child: Column(
-            children: [
-              Form(
-                  key: formKey,
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: email,
-                        decoration: InputDecoration(label: Text("Email")),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Email harus diisi';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      TextFormField(
-                        controller: password,
-                        obscureText: showPass,
-                        decoration: InputDecoration(
-                          label: Text("Password"),
-                          suffix: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                showPass = !showPass;
-                              });
-                            },
-                            icon: showPass
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Card(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            elevation: 5,
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        Text(
+                          "Logistrasi sm Tisha",
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Password harus diisi';
-                          } else {
-                            return null;
-                          }
-                        },
-                      ),
-                      MaterialButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            setState(() {
-                              isLoading = false;
-                            });
-                            var data = {
-                              "email": email.text,
-                              "password": password.text,
-                            };
-                            var result = await user.loginUser(data);
-                            setState(() {
-                              isLoading = true;
-                            });
-                            print(result.message);
-                            print("Response Status: ${result.status}");
-                            print("Response Message: ${result.message}");
-
-                            if (result.status == true) {
-                              AlertMessage()
-                                  .showAlert(context, result.message, true);
-                              print("Login status: ${result.status}");
-
-                              Future.delayed(Duration(seconds: 1), () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => DashboardView()),
-                                );
-                              });
-                            } else {
-                              AlertMessage()
-                                  .showAlert(context, result.message, false);
+                        TextFormField(
+                          controller: email,
+                          decoration: InputDecoration(
+                            labelText: "Email",
+                            border: OutlineInputBorder(),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'bagI lah Email';
                             }
-                          }
-                        },
-                        child: isLoading ==false
-                            ? Text("mASOk")
-                            : CircularProgressIndicator(),
-                        color: const Color.fromARGB(255, 255, 113, 217),
-                      )
-                    ],
-                  ))
-            ],
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 15),
+                        TextFormField(
+                          controller: password,
+                          obscureText: showPass,
+                          decoration: InputDecoration(
+                            labelText: "Password",
+                            border: OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  showPass = !showPass;
+                                });
+                              },
+                              icon: Icon(showPass
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'password nyaaa ??hm';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              var data = {
+                                "email": email.text,
+                                "password": password.text,
+                              };
+
+                              try {
+                                var result = await user.loginUser(data);
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                print("Response dari server: $result");
+
+                                if (result.status == true) {
+                                  AlertMessage().showAlert(context,
+                                      "ASeqk ManTap berhasil uy!", true);
+                                  Future.delayed(Duration(seconds: 2), () {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/dashboard');
+                                  });
+                                } else {
+                                  AlertMessage().showAlert(context,
+                                      "kayaknya ada yg salah, coba", false);
+                                }
+                              } catch (e) {
+                               
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                AlertMessage().showAlert(
+                                    context, "Kayaknya ada yg salah, hmm", false);
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 140, 0),
+                            shape: RoundedRectangleBorder(
+                               ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 40, vertical: 15),
+                          ),
+                          child: isLoading
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text("LOGIN",
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.white)),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

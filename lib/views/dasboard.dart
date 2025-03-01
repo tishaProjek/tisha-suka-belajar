@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:tokob_online/models/user_login.dart';
 import 'package:tokob_online/widgets/botton_nav.dart';
+import 'package:tokob_online/views/register_user_view.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({super.key});
@@ -38,17 +39,20 @@ class _DashboardViewState extends State<DashboardView> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Dashboard"),
-        backgroundColor: const Color.fromARGB(255, 255, 38, 38),
+        backgroundColor: const Color.fromARGB(255, 255, 136, 0),
         foregroundColor: Colors.white,
         actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.popAndPushNamed(context, '/login');
-              },
-              icon: Icon(Icons.logout))
-        ],
+  IconButton(
+    onPressed: () {
+      Navigator.popAndPushNamed(context, '/login');
+      Navigator.popAndPushNamed(context, '/dasboard');
+    },
+    icon: Icon(Icons.logout),
+  ),
+],
+
       ),
-      body: Center(child: Text("Selamat Datang yang mulia $nama anda adalah $role")),
+      body: Center(child: Text("Selamat Datang Paduka $nama anda adalah $role")),
       bottomNavigationBar: BottomNav(0),
     );
   }
